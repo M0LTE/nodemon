@@ -1,0 +1,6 @@
+@nodemon_HostAddress = http://localhost:5073
+
+GET {{nodemon_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
