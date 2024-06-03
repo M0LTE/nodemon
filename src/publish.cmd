@@ -1,0 +1,1 @@
+scp -qrp publish/* tf@gb7thl:~/nodemon/
