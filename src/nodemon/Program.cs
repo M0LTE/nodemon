@@ -7,10 +7,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Configuration.AddJsonFile("nodemon.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("/etc/nodemon.json", optional: true, reloadOnChange: true);
 builder.Services.Configure<NodeMonConfig>(builder.Configuration.GetSection(nameof(NodeMonConfig)));
-builder.Services.AddHostedService<TaitManager>();
-builder.Services.AddHostedService<ArduinoManager>();
+
 builder.Services.AddSingleton<Arduino>();
+builder.Services.AddHostedService<ArduinoManager>();
+builder.Services.AddHostedService<TaitManager>();
 
 var app = builder.Build();
 app.Urls.Clear();

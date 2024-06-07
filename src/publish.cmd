@@ -1,1 +1,1 @@
-scp -qrp publish/* tf@gb7thl:~/nodemon/
+scp -qrp publish/* tf@gb7thl:/opt/nodemon/

@@ -52,7 +52,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
                     logger.LogInformation("{port} VSWR: {vswr}", port.Id, args.Vswr);
                 };
 
-                Thread.CurrentThread.Join();
+                await radio.Run();
             }
             catch (Exception ex)
             {
