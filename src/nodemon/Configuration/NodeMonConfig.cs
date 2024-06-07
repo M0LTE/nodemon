@@ -6,6 +6,7 @@ public class NodeMonConfig
     {
         public required string Id { get; set; }
         public required int RelayPin { get; set; }
+        public bool AutoPowerOn { get; set; }
         public required string RadioPort { get; set; }
         public required int RadioBaud { get; set; }
     }

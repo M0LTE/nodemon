@@ -30,6 +30,15 @@ public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoMana
                         logger.LogInformation("Relay {relay} set to {state}", relay, state);
                     };
 
+                    foreach (var radioPort in options.Value.Ports)
+                    {
+                        if (radioPort.AutoPowerOn)
+                        {
+                            arduino.SetRelay(radioPort.RelayPin, true);
+                            logger.LogInformation("Relay {relay} auto power on", radioPort.RelayPin);
+                        }
+                    }
+
                     while (true)
                     {
                         var data = port.ReadLine();
