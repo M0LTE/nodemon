@@ -17,6 +17,8 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
         foreach (var port in config.Value.Ports)
         {
+            if (port.Skip) continue;
+
             _ = Task.Run(() => RunPort(port), cancellationToken);
         }
 

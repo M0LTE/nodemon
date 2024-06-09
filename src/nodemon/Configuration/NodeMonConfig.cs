@@ -9,6 +9,7 @@ public class NodeMonConfig
         public bool AutoPowerOn { get; set; }
         public required string RadioPort { get; set; }
         public required int RadioBaud { get; set; }
+        public bool Skip { get; set; }
     }
 
     public required string ArduinoPort { get; set; }

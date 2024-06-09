@@ -9,9 +9,18 @@ builder.Services.AddSwaggerGen();
 builder.Configuration.AddJsonFile("nodemon.json", optional: true, reloadOnChange: true);
 builder.Configuration.AddJsonFile("/etc/nodemon.json", optional: true, reloadOnChange: true);
 builder.Services.Configure<NodeMonConfig>(builder.Configuration.GetSection(nameof(NodeMonConfig)));
+builder.Services.AddLogging(options =>
+{
+    options.AddSimpleConsole(c =>
+    {
+        c.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss] ";
+        c.UseUtcTimestamp = true;
+        c.SingleLine = true;
+    });
+});
 
-builder.Services.AddSingleton<Arduino>();
-builder.Services.AddHostedService<ArduinoManager>();
+builder.Services.AddSingleton<ArduinoSingleton>();
+builder.Services.AddHostedService<ArduinoManager>(); // must come before TaitManager
 builder.Services.AddHostedService<TaitManager>();
 
 var app = builder.Build();

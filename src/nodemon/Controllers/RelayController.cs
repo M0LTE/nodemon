@@ -5,7 +5,7 @@ namespace nodemon.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RelayController(Arduino arduino) : ControllerBase
+public class RelayController(ArduinoSingleton arduino) : ControllerBase
 {
     [HttpPut(Name = "SetRelays")]
     public void SetRelays(string relays, bool state)
