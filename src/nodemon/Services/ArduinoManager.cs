@@ -30,7 +30,21 @@ public class ArduinoManager : IHostedService, IDisposable
 
         logger.LogInformation("Opening serial port {port}", options.Value.ArduinoPort);
 
-        arduinoSerialPort.Open();
+        try
+        {
+            arduinoSerialPort.Open();
+        }
+        catch (FileNotFoundException)
+        {
+            logger.LogError("Serial port {port} does not exist", options.Value.ArduinoPort);
+            return;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Could not open serial port {port}: {message}", options.Value.ArduinoPort, ex.Message);
+            return;
+        }
+
         arduinoSerialPort.DiscardInBuffer();
 
         arduinoSerialPort.ReadTimeout = 1000;

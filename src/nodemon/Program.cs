@@ -18,10 +18,11 @@ builder.Services.AddLogging(options =>
         c.SingleLine = true;
     });
 });
-
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<ArduinoSingleton>();
 builder.Services.AddHostedService<ArduinoManager>(); // must come before TaitManager
 builder.Services.AddHostedService<TaitManager>();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 app.Urls.Clear();
@@ -31,9 +32,9 @@ app.Urls.Add("http://0.0.0.0:5000");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.MapRazorPages();
+app.MapHub<NodeHub>("/nodeHub");
 app.Run();

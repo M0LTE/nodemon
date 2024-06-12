@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using nodemon.Configuration;
 using System.Diagnostics;
 using tait_ccdi;
 
 namespace nodemon.Services;
 
-public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger) : IHostedService
+public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger, IHubContext<NodeHub> hubContext) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -34,9 +35,11 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
             {
                 logger.LogInformation("Opening port {port} {radioPort}", port.Id, port.RadioPort);
                 
-                TaitRadio radio = new(port.RadioPort, port.RadioBaud);
-                radio.RawRssiUpdated += (sender, args) =>
+                TaitRadio radio = new(port.RadioPort, port.RadioBaud, logger);
+                radio.RawRssiUpdated += async (sender, args) =>
                 {
+                    await hubContext.Clients.All.SendAsync("RssiUpdate", args.Rssi);
+
                     if (lastReported.Elapsed > TimeSpan.FromSeconds(10))
                     {
                         logger.LogInformation("{port} RSSI: {rssi}", port.Id, args.Rssi);
@@ -53,6 +56,8 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
                 {
                     logger.LogInformation("{port} VSWR: {vswr}", port.Id, args.Vswr);
                 };
+                
+                radio.StartGetRawRssi();
 
                 await radio.Run();
             }
