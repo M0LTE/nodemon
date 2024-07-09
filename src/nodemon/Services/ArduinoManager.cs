@@ -59,7 +59,7 @@ public class ArduinoManager : IHostedService, IDisposable
                     break;
                 }
             }
-            catch (OperationCanceledException)
+            catch (TimeoutException)
             {
                 logger.LogWarning("No response from Arduino sketch; is this the right serial port? Looking for a board running https://github.com/M0LTE/arduino-relay-control/blob/main/relay_control_and_temp_hum_sense/relay_control_and_temp_hum_sense.ino");
             }
