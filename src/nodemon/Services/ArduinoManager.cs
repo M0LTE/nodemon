@@ -11,6 +11,7 @@ public class ArduinoManager : IHostedService, IDisposable
     private readonly ArduinoSingleton arduino;
     private readonly SerialPort arduinoSerialPort;
     private bool stopping;
+    private readonly Dictionary<int, bool> states = [];
 
     public ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoManager> logger, ArduinoSingleton arduino)
     {
@@ -69,8 +70,14 @@ public class ArduinoManager : IHostedService, IDisposable
 
         arduino.OnSetRelay = (relay, state) =>
         {
+            states[relay] = state;
             arduinoSerialPort.Write($"r{relay}{(state ? 1 : 0)}");
             logger.LogInformation("Commanding relay {relay} to {state}", relay, state);
+        };
+
+        arduino.OnGetRelay = (relay) =>
+        {
+            return states[relay];
         };
 
         var poweredAnyOn = false;

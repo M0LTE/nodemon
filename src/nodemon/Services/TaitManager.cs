@@ -23,7 +23,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         }
     }
 
-    private List<TaitRadio> radios = new();
+    private Dictionary<string, TaitRadio> radios = [];
 
     private Task Run(NodeMonConfig.Port port)
     {
@@ -33,7 +33,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
             logger.LogInformation("Opening port {port} {radioPort}", port.Id, port.RadioPort);
 
             TaitRadio radio = TaitRadio.Create(port.RadioPort, port.RadioBaud, logger);
-            radios.Add(radio);
+            radios.Add(port.Id, radio);
 
             radio.RawRssiUpdated += async (sender, args) =>
             {
@@ -71,6 +71,16 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
+        return Task.CompletedTask;
+    }
+
+    public Task SetChannel(string port, int channel)
+    {
+        if (radios.TryGetValue(port, out var radio))
+        {
+            radio.GoToChannel(channel);
+        }
+
         return Task.CompletedTask;
     }
 }

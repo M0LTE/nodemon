@@ -21,3 +21,9 @@ radios
 /dev/serial/by-path/pci-0000:00:14.0-usb-0:1.3:1.0-port0
 
 ```
+
+## Roadmap
+
+- implement the API
+- bring in KISS monitor
+- .deb package
