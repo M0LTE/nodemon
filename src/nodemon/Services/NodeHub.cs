@@ -26,7 +26,11 @@ public class NodeHub : Hub
 
     public Task ChannelChanged(string portId, string channel)
     {
-        logger.LogInformation("ChannelChanged: {portId} {channel}", portId, channel);
+        if (taitSingleton.Radios.TryGetValue(portId, out var radio))
+        {
+            radio.GoToChannel(int.Parse(channel));
+        }
+
         return Task.CompletedTask;
     }
 
