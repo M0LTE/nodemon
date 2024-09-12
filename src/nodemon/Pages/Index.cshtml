@@ -9,14 +9,23 @@
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/node.js"></script>
 
-<div class="mb-3">
-    <label for="toggle1" class="form-label">2m radio</label>
-    <input type="checkbox" class="form-control" data-toggle="toggle" checked id="toggle1" onclick="toggle1(this)">
-</div>
-
-<div class="mb-3">
-    <label for="toggle2" class="form-label">4m radio</label>
-    <input type="checkbox" class="form-control" data-toggle="toggle" checked id="toggle2" onclick="toggle2(this)">
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm">
+            <label for="toggle1" class="form-label">2m radio</label>
+            <input type="checkbox" class="form-control" data-toggle="toggle" checked id="toggle1" onclick="toggle1(this)" />
+        </div>
+        <div class="col-sm">
+            <label for="channel_1" class="form-label">Channel</label>
+            <input type="number" class="form-control" id="channel_1" min="0" max="8" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <label for="toggle2" class="form-label">4m radio</label>
+            <input type="checkbox" class="form-control" data-toggle="toggle" checked id="toggle2" onclick="toggle2(this)" />
+        </div>
+    </div>
 </div>
 
 <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">

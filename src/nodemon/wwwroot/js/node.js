@@ -40,9 +40,13 @@ connection.on("RssiUpdate", function (rssi) {
     }
 });
 
-connection.start().catch(function (err) {
+connection.start().then(function () {
+    connection.invoke("GetChannel", "2m").then(function (result) {
+        $('#channel_1').val(result);
+    });
+}).catch(function (err) {
     return console.error(err.toString());
-});
+})
 
 $(document).ready(function () {
     $('#toggle1').change(function () {
@@ -53,6 +57,12 @@ $(document).ready(function () {
 
     $('#toggle2').change(function () {
         connection.invoke("ToggleChanged", 6, this.checked).catch(function (err) {
+            return console.error(err.toString());
+        })
+    });
+
+    $('#channel_1').on('change', function () {
+        connection.invoke("ChannelChanged", "2m", this.value).catch(function (err) {
             return console.error(err.toString());
         })
     });
