@@ -31,13 +31,14 @@ for (var i = 0; i < points; i++) {
 }
 
 connection.on("RssiUpdate", function (rssi) {
-    //document.getElementById("rssi").innerText = rssi
 
-    lineChart.data.series[0].push(rssi);
-    if (lineChart.data.series[0].length > points) {
-        lineChart.data.series[0].shift()
+    if (rssi.p == "2m") {
+        lineChart.data.series[0].push(rssi.r);
+        if (lineChart.data.series[0].length > points) {
+            lineChart.data.series[0].shift()
+        }
+        lineChart.update();
     }
-    lineChart.update();
 });
 
 connection.start().catch(function (err) {
