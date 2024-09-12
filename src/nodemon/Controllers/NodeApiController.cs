@@ -15,21 +15,22 @@ public class NodeApiController(ILogger<NodeApiController> logger, NodeService no
     }
 
     [HttpPatch("restart")]
-    public IActionResult RestartBpq()
+    public async Task<IActionResult> RestartNodeSoftware()
     {
         logger.LogInformation("Got request to restart node software");
+        await nodeService.RestartNodeSoftware();
         return Ok();
     }
 
     [HttpPatch("start")]
-    public IActionResult StartBpq()
+    public async Task<IActionResult> StartNodeSoftware()
     {
         logger.LogInformation("Got request to start node software");
         return Ok();
     }
 
     [HttpPatch("stop")]
-    public IActionResult StopBpq()
+    public IActionResult StopNodeSoftware()
     {
         logger.LogInformation("Got request to stop node software");
         return Ok();

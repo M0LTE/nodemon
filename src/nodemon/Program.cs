@@ -1,5 +1,6 @@
 using nodemon.Configuration;
 using nodemon.Services;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,16 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<ArduinoSingleton>();
 builder.Services.AddHostedService<ArduinoManager>(); // must come before TaitManager
 builder.Services.AddHostedService<TaitManager>();
+builder.Services.AddSingleton<TaitSingleton>();
+builder.Services.AddSingleton<NodeService>();
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+{
+    builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();
+}
+else
+{
+    builder.Services.AddSingleton<INodeSoftwareStateService, DevNodeSoftwareStateService>();
+}
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

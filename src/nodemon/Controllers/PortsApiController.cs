@@ -7,7 +7,7 @@ namespace nodemon.Controllers;
 [ApiController]
 public class PortsApiController(ILogger<PortsApiController> logger, NodeService nodeService, ArduinoSingleton arduinoSingleton) : ControllerBase
 {
-    [HttpPatch("{port}/transmit")]
+    [HttpPost("{port}/transmit")]
     public IActionResult Transmit(string port, [FromBody] byte[] bytes)
     {
         logger.LogInformation("Got request to transmit {count} bytes on port {port}", bytes.Length, port);
@@ -45,31 +45,18 @@ public class PortsApiController(ILogger<PortsApiController> logger, NodeService 
     }
 
     [HttpGet("{port}/radio/channel")]
-    public IActionResult GetRadioChannel(string port)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+    public async Task<IActionResult> GetRadioChannel(string port)
     {
         logger.LogInformation("Get current radio channel for port {port}", port);
-        return Ok(2 + port);
+        return Ok(await nodeService.GetRadioChannel(port));
     }
 
-    [HttpPatch("{port}/radio/channel")]
-    public async Task<IActionResult> SetRadioChannel(string port, [FromBody] int channel)
+    [HttpPut("{port}/radio/channel")]
+    public async Task<IActionResult> SetRadioChannel(string port, int value)
     {
-        logger.LogInformation("Set radio channel for port {port} to {channel}", port, channel);
-        await nodeService.SetRadioChannel(port, channel);
-        return Ok();
-    }
-
-    [HttpGet("{port}/radio/rfpower")]
-    public IActionResult GetRadioRfPower(string port)
-    {
-        logger.LogInformation("Get current radio power for port {port}", port);
-        return Ok("high");
-    }
-
-    [HttpPatch("{port}/radio/rfpower")]
-    public IActionResult SetRadioRfPower(string port, [FromBody] string power)
-    {
-        logger.LogInformation("Set radio power for port {port} to {channel}", port, power);
+        logger.LogInformation("Set radio channel for port {port} to {channel}", port, value);
+        await nodeService.SetRadioChannel(port, value);
         return Ok();
     }
 
@@ -80,8 +67,8 @@ public class PortsApiController(ILogger<PortsApiController> logger, NodeService 
         return Ok("mode " + port);
     }
 
-    [HttpPatch("{port}/modem/mode")]
-    public IActionResult SetModemMode(string port, [FromBody] string mode)
+    [HttpPut("{port}/modem/mode")]
+    public IActionResult SetModemMode(string port, string mode)
     {
         logger.LogInformation("Set modem mode for port {port} to {mode}", port, mode);
         return Ok();
@@ -94,8 +81,8 @@ public class PortsApiController(ILogger<PortsApiController> logger, NodeService 
         return Ok("on");
     }
 
-    [HttpPatch("{port}/radio/dcpower")]
-    public IActionResult SetRadioDcPowerState(string port, [FromBody] bool state)
+    [HttpPut("{port}/radio/dcpower")]
+    public IActionResult SetRadioDcPowerState(string port, bool state)
     {
         logger.LogInformation("Set DC power state for port {port} to {state}", port, state);
         return Ok();
@@ -104,7 +91,7 @@ public class PortsApiController(ILogger<PortsApiController> logger, NodeService 
 
 public class NodeState
 {
-    public BpqState? BpqState { get; set; }
+    public ServiceState? BpqState { get; set; }
     public required string Type { get; set; }
 }
 

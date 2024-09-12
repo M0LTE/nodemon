@@ -6,7 +6,12 @@ using tait_ccdi;
 
 namespace nodemon.Services;
 
-public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger, IHubContext<NodeHub> hubContext) : IHostedService
+public class TaitSingleton
+{
+    public Dictionary<string, TaitRadio> Radios = [];
+}
+
+public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger, IHubContext<NodeHub> hubContext, TaitSingleton taitSingleton) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -23,8 +28,6 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         }
     }
 
-    private Dictionary<string, TaitRadio> radios = [];
-
     private Task Run(NodeMonConfig.Port port)
     {
         var lastReported = Stopwatch.StartNew();
@@ -32,8 +35,8 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         {
             logger.LogInformation("Opening port {port} {radioPort}", port.Id, port.RadioPort);
 
-            TaitRadio radio = TaitRadio.Create(port.RadioPort, port.RadioBaud, logger);
-            radios.Add(port.Id, radio);
+            TaitRadio radio = new(port.RadioPort, port.RadioBaud, logger);
+            taitSingleton.Radios.Add(port.Id, radio);
 
             radio.RawRssiUpdated += async (sender, args) =>
             {
@@ -71,16 +74,6 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
-    }
-
-    public Task SetChannel(string port, int channel)
-    {
-        if (radios.TryGetValue(port, out var radio))
-        {
-            radio.GoToChannel(channel);
-        }
-
         return Task.CompletedTask;
     }
 }

@@ -6,9 +6,9 @@ namespace nodemon.Services;
 public class NodeService(
     ArduinoSingleton arduino, 
     ILogger<NodeService> logger, 
-    IBpqStateService bpqStateService,
+    INodeSoftwareStateService bpqStateService,
     IOptions<NodeMonConfig> options,
-    TaitManager taitManager
+    TaitSingleton taitSingleton
     )
 {
     public PortsResponse GetPorts()
@@ -16,27 +16,38 @@ public class NodeService(
         throw new NotImplementedException();
     }
 
-    public async Task<BpqState> GetBpqState()
+    public async Task<ServiceState> GetBpqState()
     {
-        var result = new BpqState
+        var result = new ServiceState
         {
             Present = await bpqStateService.IsBinaryPresent(),
-            Installed = await bpqStateService.IsBpqServiceInstalled(),
-            Enabled = await bpqStateService.IsBpqServiceEnabled(),
+            Installed = await bpqStateService.IsServiceInstalled(),
+            Enabled = await bpqStateService.ISserviceEnabled(),
             ConfigPresent = await bpqStateService.IsConfigPresent(),
-            Running = await bpqStateService.IsBpqServiceRunning(),
+            Running = await bpqStateService.IsServiceRunning(),
         };
         
         return result;
     }
 
-    public async Task SetRadioChannel(string port, int channel)
+    public Task SetRadioChannel(string port, int channel)
     {
-        await taitManager.SetChannel(port, channel);
+        taitSingleton.Radios[port].GoToChannel(channel);
+        return Task.CompletedTask;
+    }
+
+    internal Task<int> GetRadioChannel(string port)
+    {
+        return Task.FromResult(taitSingleton.Radios[port].GetCurrentChannel());
+    }
+
+    internal async Task RestartNodeSoftware()
+    {
+        throw new NotImplementedException();
     }
 }
 
-public record BpqState
+public record ServiceState
 {
     public bool Installed { get; set; }
     public bool Running { get; set; }

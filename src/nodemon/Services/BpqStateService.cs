@@ -3,16 +3,16 @@ using static SimpleExec.Command;
 
 namespace nodemon.Services;
 
-public interface IBpqStateService
+public interface INodeSoftwareStateService
 {
     Task<bool> IsBinaryPresent();
-    Task<bool> IsBpqServiceInstalled();
-    Task<bool> IsBpqServiceEnabled();
-    Task<bool> IsBpqServiceRunning();
+    Task<bool> IsServiceInstalled();
+    Task<bool> ISserviceEnabled();
+    Task<bool> IsServiceRunning();
     Task<bool> IsConfigPresent();
 }
 
-public class DevBpqStateService : IBpqStateService
+public class DevNodeSoftwareStateService : INodeSoftwareStateService
 {
     private static Random random = new();
     public Task<bool> IsBinaryPresent()
@@ -20,16 +20,16 @@ public class DevBpqStateService : IBpqStateService
         return Task.FromResult(random.NextDouble() < 0.5);
     }
 
-    public Task<bool> IsBpqServiceInstalled()
+    public Task<bool> IsServiceInstalled()
     {
         return Task.FromResult(true);
     }
-    public Task<bool> IsBpqServiceEnabled()
+    public Task<bool> ISserviceEnabled()
     {
         return Task.FromResult(true);
     }
 
-    public Task<bool> IsBpqServiceRunning()
+    public Task<bool> IsServiceRunning()
     {
         return Task.FromResult(false);
     }
@@ -40,14 +40,14 @@ public class DevBpqStateService : IBpqStateService
     }
 }
 
-public class LinuxBpqStateService : IBpqStateService
+public class LinuxBpqStateService : INodeSoftwareStateService
 {
     public Task<bool> IsBinaryPresent()
     {
         return Task.FromResult(File.Exists("/opt/linbpq/linbpq"));
     }
 
-    public async Task<bool> IsBpqServiceRunning()
+    public async Task<bool> IsServiceRunning()
     {
         try
         {
@@ -60,7 +60,7 @@ public class LinuxBpqStateService : IBpqStateService
         }
     }
 
-    public async Task<bool> IsBpqServiceEnabled()
+    public async Task<bool> ISserviceEnabled()
     {
         try
         {
@@ -78,7 +78,7 @@ public class LinuxBpqStateService : IBpqStateService
         }
     }
 
-    public async Task<bool> IsBpqServiceInstalled()
+    public async Task<bool> IsServiceInstalled()
     {
         try
         {
