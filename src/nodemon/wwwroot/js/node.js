@@ -32,6 +32,8 @@ for (var i = 0; i < points; i++) {
 
 connection.on("RssiUpdate", function (rssi) {
 
+    console.log(rssi)
+
     if (rssi.p == "2m") {
         lineChart.data.series[0].push(rssi.r);
         if (lineChart.data.series[0].length > points) {
