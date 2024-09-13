@@ -42,7 +42,7 @@ connection.on("RssiUpdate", function (rssi) {
 
 connection.on("VswrUpdate", function (vswr) {
     if (vswr.p == "2m") {
-        $('#vswr_1').val(vswr.v);
+        $('#vswr_1').text(vswr.v);
     }
 });
 
