@@ -40,6 +40,12 @@ connection.on("RssiUpdate", function (rssi) {
     }
 });
 
+connection.on("VswrUpdate", function (vswr) {
+    if (vswr.p == "2m") {
+        $('#vswr_1').val(vswr.v);
+    }
+});
+
 connection.start().then(function () {
     connection.invoke("GetChannel", "2m").then(function (result) {
         $('#channel_1').val(result);

@@ -56,6 +56,8 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
             radio.VswrChanged += (sender, args) =>
             {
+                hubContext.Clients.All.SendAsync("VswrUpdate", new { v = args.Vswr, p = port.Id });
+
                 logger.LogInformation("{port} VSWR: {vswr}", port.Id, args.Vswr);
             };
 

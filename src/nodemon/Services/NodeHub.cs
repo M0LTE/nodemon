@@ -15,6 +15,7 @@ public class NodeHub : Hub
         this.taitSingleton = taitSingleton;
     }
 
+    // these are methods which get called by the UI, from Javascript
 
     public Task ToggleChanged(int relay, bool isOn)
     {
