@@ -24,7 +24,7 @@ public class ModemModeManager(ILogger<ModemModeManager> logger, IOptions<NodeMon
 
         var parameters = $"-p {kernelInterface} -h {id}";
 
-        await RunAsync("kissparms", parameters); // +16 makes the setting transient, saving flash writes
+        await RunAsync("/usr/sbin/kissparms", parameters); // +16 makes the setting transient, saving flash writes
 
         logger.LogInformation("Set modem mode for port {port} to {mode} (command: kissparms {})", port, id, parameters);
         return true;
