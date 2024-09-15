@@ -10,7 +10,7 @@ public class NodeMonConfig
         public required string RadioPort { get; set; }
         public required int RadioBaud { get; set; }
         public bool Skip { get; set; }
-        public string? KernelInterface { get; set; }
+        public string? KernelAxport { get; set; }
     }
 
     public required string ArduinoPort { get; set; }
