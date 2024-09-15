@@ -18,7 +18,7 @@
         </div>
         <div class="col-sm">
             <label for="channel_1" class="form-label">Channel</label>
-            <input type="number" class="form-control" id="channel_1" min="0" max="8" />
+            <select id="channel_1" asp-items="Model.PortChannels2m"></select>
         </div>
         <div class="col-sm">
             <label for="vswr_1" class="form-label">VSWR</label>

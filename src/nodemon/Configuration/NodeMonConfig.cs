@@ -11,8 +11,16 @@ public class NodeMonConfig
         public required int RadioBaud { get; set; }
         public bool Skip { get; set; }
         public string? KernelAxport { get; set; }
+        public List<Channel>? Channels { get; set; } = [];
     }
 
     public required string ArduinoPort { get; set; }
     public required Port[] Ports { get; set; }
+
+    public record Channel
+    {
+        public int Id { get; set; }
+        public decimal MHz { get; set; }
+        public int W { get; set; }
+    }
 }
