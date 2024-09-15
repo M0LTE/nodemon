@@ -29,9 +29,16 @@ public class NodeHub : Hub
     {
         if (taitSingleton.Radios.TryGetValue(portId, out var radio))
         {
-            radio.GoToChannel(int.Parse(channel));
+            if (radio.GoToChannel(int.Parse(channel)))
+            {
+                logger.LogInformation("ChannelChanged: {portId} {channel}", portId, channel);
+            }
+            else
+            {
+                logger.LogWarning("ChannelChanged: {portId} {channel} failed", portId, channel);
+            }
         }
-
+        
         return Task.CompletedTask;
     }
 
