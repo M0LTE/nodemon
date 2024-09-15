@@ -48,7 +48,7 @@ public class ArduinoManager : IHostedService, IDisposable
 
         arduinoSerialPort.DiscardInBuffer();
 
-        arduinoSerialPort.ReadTimeout = 1000;
+        arduinoSerialPort.ReadTimeout = 5000;
         while (true)
         {
             arduinoSerialPort.Write("?");
