@@ -28,7 +28,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         }
     }
 
-    private Stopwatch lastRssiReportedToUI = Stopwatch.StartNew();
+    private static Stopwatch lastRssiReportedToUI = Stopwatch.StartNew();
 
     private Task Run(NodeMonConfig.Port port)
     {
