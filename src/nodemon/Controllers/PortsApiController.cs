@@ -68,9 +68,10 @@ public class PortsApiController(ILogger<PortsApiController> logger, NodeService 
     }
 
     [HttpPut("{port}/modem/mode")]
-    public IActionResult SetModemMode(string port, string mode)
+    public async Task<IActionResult> SetModemMode(string port, int id)
     {
-        logger.LogInformation("Set modem mode for port {port} to {mode}", port, mode);
+        logger.LogInformation("Set modem mode for port {port} to {mode}", port, id);
+        await nodeService.SetModemMode(port, id);
         return Ok();
     }
 

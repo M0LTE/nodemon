@@ -25,6 +25,7 @@ builder.Services.AddHostedService<ArduinoManager>(); // must come before TaitMan
 builder.Services.AddHostedService<TaitManager>();
 builder.Services.AddSingleton<TaitSingleton>();
 builder.Services.AddSingleton<NodeService>();
+builder.Services.AddTransient<IModemModeManager, ModemModeManager>();
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
     builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();

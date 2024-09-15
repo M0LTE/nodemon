@@ -72,4 +72,17 @@ $(document).ready(function () {
             return console.error(err.toString());
         })
     });
+
+    $('#ninoMode_1').on('change', function () {
+        fetch('/api/ports/2m/modem/mode?id=' + this.value, {
+            method: 'put'
+        }).then(() => {
+            console.log('posted ' + this.value)
+        })
+    });
+
+    //fetch('/api/ports/2m/modem/mode')
+        //.then(response => {
+        //});
+    //$('ninoMode_1')
 });

@@ -8,7 +8,8 @@ public class NodeService(
     ILogger<NodeService> logger, 
     INodeSoftwareStateService bpqStateService,
     IOptions<NodeMonConfig> options,
-    TaitSingleton taitSingleton
+    TaitSingleton taitSingleton,
+    IModemModeManager modemModeManager
     )
 {
     public PortsResponse GetPorts()
@@ -44,6 +45,18 @@ public class NodeService(
     internal async Task RestartNodeSoftware()
     {
         throw new NotImplementedException();
+    }
+
+    internal async Task SetModemMode(string port, int id)
+    {
+        if (id >= 0 && id < 16)
+        {
+            await modemModeManager.SetModemMode(port, id);
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException("id", "Modem mode ID must be between 0 and 15");
+        }
     }
 }
 
