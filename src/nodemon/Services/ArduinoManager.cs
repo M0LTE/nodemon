@@ -33,6 +33,7 @@ public class ArduinoManager : IHostedService, IDisposable
 
         try
         {
+            arduinoSerialPort.DtrEnable = true; // stop the arduino from resetting
             arduinoSerialPort.Open();
         }
         catch (FileNotFoundException)
