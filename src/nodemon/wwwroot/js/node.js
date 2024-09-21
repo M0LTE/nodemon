@@ -48,7 +48,7 @@ connection.on("VswrUpdate", function (vswr) {
 
 connection.on("MonitorHeard", function (mon) {
     var tb = $('#monitor')
-    tb.val(tb.val() + "\n" + mon.port + ": " + mon.data)
+    tb.val(tb.val() + "\n" + mon.data)
 
     if (tb.length)
         tb.scrollTop(tb[0].scrollHeight - tb.height());
