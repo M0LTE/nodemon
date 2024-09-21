@@ -17,7 +17,8 @@ public class KernelMonitorService(IOptions<NodeMonConfig> config, ILogger<Kernel
             var cts = new CancellationTokenSource();
             cancellationTokenSources.Add(cts);
 
-            Cli.Wrap($"/usr/bin/axlisten -p {port.KernelAxport}")
+            Cli.Wrap("/usr/bin/axlisten")
+                .WithArguments($"-p {port.KernelAxport}")
                 .WithStandardOutputPipe(PipeTarget.ToDelegate(data => logger.LogInformation(data)))
                 .ExecuteAsync(cts.Token);
         }
