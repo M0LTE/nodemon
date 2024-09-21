@@ -46,6 +46,11 @@ connection.on("VswrUpdate", function (vswr) {
     }
 });
 
+connection.on("MonitorHeard", function (mon) {
+    var tb = $('#monitor')
+    tb.val(tb.val() + "\n" + mon.port + ": " + mon.data)
+})
+
 connection.start().then(function () {
     connection.invoke("GetChannel", "2m").then(function (result) {
         $('#channel_1').val(result);
