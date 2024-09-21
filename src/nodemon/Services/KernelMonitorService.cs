@@ -4,13 +4,13 @@ using nodemon.Configuration;
 
 namespace nodemon.Services;
 
-public class MonitorService(IOptions<NodeMonConfig> config, ILogger<MonitorService> logger) : IHostedService
+public class KernelMonitorService(IOptions<NodeMonConfig> config, ILogger<KernelMonitorService> logger) : IHostedService
 {
     private readonly List<CancellationTokenSource> cancellationTokenSources = [];
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var port in config.Value!.Ports.Where(p => !p.Skip))
+        foreach (var port in config.Value!.Ports.Where(p => !p.Skip && !string.IsNullOrWhiteSpace(p.KernelAxport)))
         {
             logger.LogInformation("Starting monitor for port {port}", port.Id);
 
