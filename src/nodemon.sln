@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nodemon", "nodemon\nodemon.csproj", "{3D2311F9-53A2-4F37-871B-139F054476D3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kissproxylib", "..\..\kissproxy\src\kissproxylib\kissproxylib.csproj", "{BB8BD247-D33C-4A09-BBA7-814670D98F55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3D2311F9-53A2-4F37-871B-139F054476D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D2311F9-53A2-4F37-871B-139F054476D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D2311F9-53A2-4F37-871B-139F054476D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8BD247-D33C-4A09-BBA7-814670D98F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8BD247-D33C-4A09-BBA7-814670D98F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8BD247-D33C-4A09-BBA7-814670D98F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8BD247-D33C-4A09-BBA7-814670D98F55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,6 +12,11 @@ public class NodeMonConfig
         public bool Skip { get; set; }
         public string? KernelAxport { get; set; }
         public List<Channel>? Channels { get; set; } = [];
+        
+        public bool EnableProxy { get; set; }
+        public string? ModemPath { get; set; }
+        public int? ModemBaud { get; set; }
+        public int? ListenOnTcpPort { get; set; }
     }
 
     public required string ArduinoPort { get; set; }
