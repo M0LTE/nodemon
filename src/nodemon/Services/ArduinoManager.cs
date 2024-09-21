@@ -112,6 +112,11 @@ public class ArduinoManager : IHostedService, IDisposable
                 {
                     data = arduinoSerialPort.ReadLine();
                 }
+                catch (ObjectDisposedException)
+                {
+                    // shutting down
+                    return;
+                }
                 catch (OperationCanceledException)
                 {
                     logger.LogInformation("Arduino read timed out");
