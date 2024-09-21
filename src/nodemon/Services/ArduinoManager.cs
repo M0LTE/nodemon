@@ -48,9 +48,11 @@ public class ArduinoManager : IHostedService, IDisposable
 
         arduinoSerialPort.DiscardInBuffer();
 
-        arduinoSerialPort.ReadTimeout = 5000;
+        arduinoSerialPort.ReadTimeout = 1000;
+        await Task.Delay(1000);
         while (true)
         {
+            logger.LogInformation("Querying for running firmware");
             arduinoSerialPort.Write("?");
             try
             {
@@ -64,7 +66,7 @@ public class ArduinoManager : IHostedService, IDisposable
             {
                 logger.LogWarning("No response from Arduino sketch; is this the right serial port? Looking for a board running https://github.com/M0LTE/arduino-relay-control/blob/main/relay_control_and_temp_hum_sense/relay_control_and_temp_hum_sense.ino");
             }
-            await Task.Delay(5000, cancellationToken);
+            await Task.Delay(1000, cancellationToken);
         }
         arduinoSerialPort.ReadTimeout = 65000;
 
