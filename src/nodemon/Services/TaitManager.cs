@@ -28,6 +28,8 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         }
     }
 
+    Stopwatch lastSent = Stopwatch.StartNew();
+
     private Task Run(NodeMonConfig.Port port)
     {
         var lastRssiReported = Stopwatch.StartNew();
@@ -40,9 +42,13 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
             radio.RawRssiUpdated += async (sender, args) =>
             {
-                await hubContext.Clients.All.SendAsync("RssiUpdate", new { r = args.Rssi, p = port.Id });
+                if (lastSent.ElapsedMilliseconds > 500)
+                {
+                    await hubContext.Clients.All.SendAsync("RssiUpdate", new { r = args.Rssi, p = port.Id });
+                    lastSent.Restart();
+                }
 
-                if (lastRssiReported.Elapsed > TimeSpan.FromSeconds(10))
+                if (lastRssiReported.Elapsed > TimeSpan.FromSeconds(60))
                 {
                     logger.LogInformation("{port} RSSI: {rssi}", port.Id, args.Rssi);
                     lastRssiReported.Restart();
