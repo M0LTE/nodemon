@@ -41,7 +41,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
             radio.RawRssiUpdated += async (sender, args) =>
             {
-                if (lastRssiUpdateSent.ElapsedMilliseconds > 500)
+                if (lastRssiUpdateSent.ElapsedMilliseconds > 100)
                 {
                     await hubContext.Clients.All.SendAsync("RssiUpdate", new { r = args.Rssi, p = port.Id });
                     lastRssiUpdateSent.Restart();
