@@ -30,7 +30,7 @@ public class KernelMonitorService(IHubContext<NodeHub> hubContext, IOptions<Node
     private async Task Log(NodeMonConfig.Port port, string data)
     {
         logger.LogInformation(data);
-        await hubContext.Clients.All.SendAsync("RssiUpdate", new { port = port.Id, data });
+        await hubContext.Clients.All.SendAsync("MonitorHeard", new { port = port.Id, data });
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
