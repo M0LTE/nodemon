@@ -26,6 +26,7 @@
     <PackageReference Include="m0lte.tait-ccdi" Version="0.6.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
     <PackageReference Include="SimpleExec" Version="12.0.0" />
+    <PackageReference Include="cliwrap" Version="3.6.6" />
   </ItemGroup>
 
 </Project>

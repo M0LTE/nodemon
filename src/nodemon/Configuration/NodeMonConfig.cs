@@ -10,6 +10,9 @@ public class NodeMonConfig
         public required string RadioPort { get; set; }
         public required int RadioBaud { get; set; }
         public bool Skip { get; set; }
+        /// <summary>
+        /// As in /etc/axports
+        /// </summary>
         public string? KernelAxport { get; set; }
         public List<Channel>? Channels { get; set; } = [];
     }

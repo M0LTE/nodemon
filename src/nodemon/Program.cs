@@ -26,6 +26,7 @@ builder.Services.AddHostedService<TaitManager>();
 builder.Services.AddSingleton<TaitSingleton>();
 builder.Services.AddSingleton<NodeService>();
 builder.Services.AddTransient<IModemModeManager, ModemModeManager>();
+builder.Services.AddHostedService<MonitorService>();
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
     builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();
