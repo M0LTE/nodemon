@@ -131,28 +131,37 @@ public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoMana
 
     private void HandleSensorData(string data)
     {
+        if (TryParseSensorData(data, out var temp, out var hum))
+        {
+            telemetrySingleton.ChassisTemperature = temp;
+            telemetrySingleton.ChassisHumidity = hum;
+        }
+        else
+        {
+            logger.LogWarning("Could not parse sensor data: {data}", data);
+        }
+    }
+
+    private static bool TryParseSensorData(string data, out int temp, out int hum)
+    {
         // sensor: 22C 76%
 
-        logger.LogInformation("HandleSensorData: {data}", data);
-        
         var parts = data.Split(' ');
         if (parts.Length != 3)
         {
-            logger.LogWarning("Invalid sensor data: {data}", data);
-            return;
+            temp = hum = default;
+            return false;
         }
 
-        if (int.TryParse(parts[1][..^1], out var temperature))
+        if (int.TryParse(parts[1][..^1], out var temperature) && int.TryParse(parts[2][..^1], out var humidity))
         {
-            logger.LogInformation("Parsed temperature: {temperature}", temperature);
-            telemetrySingleton.ChassisTemperature = temperature;
+            temp = temperature;
+            hum = humidity;
+            return true;
         }
 
-        if (int.TryParse(parts[2][..^1], out var humidity))
-        {
-            logger.LogInformation("Parsed humidity: {humidity}", humidity);
-            telemetrySingleton.ChassisHumidity = humidity;
-        }
+        temp = hum = default;
+        return false;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
