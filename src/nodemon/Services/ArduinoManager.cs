@@ -132,6 +132,8 @@ public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoMana
     private void HandleSensorData(string data)
     {
         // sensor: 22C 76%
+
+        logger.LogInformation("HandleSensorData: {data}", data);
         
         var parts = data.Split(' ');
         if (parts.Length != 3)
@@ -142,11 +144,13 @@ public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoMana
 
         if (int.TryParse(parts[1][..^1], out var temperature))
         {
+            logger.LogInformation("Parsed temperature: {temperature}", temperature);
             telemetrySingleton.ChassisTemperature = temperature;
         }
 
         if (int.TryParse(parts[2][..^1], out var humidity))
         {
+            logger.LogInformation("Parsed humidity: {humidity}", humidity);
             telemetrySingleton.ChassisHumidity = humidity;
         }
     }
