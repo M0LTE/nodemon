@@ -142,11 +142,11 @@ public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoMana
         }
     }
 
-    private static bool TryParseSensorData(string data, out int temp, out int hum)
+    public static bool TryParseSensorData(string data, out int temp, out int hum)
     {
         // sensor: 22C 76%
 
-        var parts = data.Split(' ');
+        var parts = data.Trim().Split(' ');
         if (parts.Length != 3)
         {
             temp = hum = default;
