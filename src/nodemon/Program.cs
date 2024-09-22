@@ -20,6 +20,7 @@ builder.Services.AddLogging(options =>
     });
 });
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<TelemetrySingleton>();
 builder.Services.AddSingleton<ArduinoSingleton>();
 builder.Services.AddHostedService<ArduinoManager>(); // must come before TaitManager
 builder.Services.AddHostedService<TaitManager>();
@@ -29,6 +30,7 @@ builder.Services.AddTransient<IModemModeManager, ModemModeManager>();
 builder.Services.AddHostedService<KernelMonitorService>();
 builder.Services.AddSingleton<BeaconService>();
 builder.Services.AddHostedService<BeaconOnStartup>();
+builder.Services.AddHostedService<RegularTelemetryBeaconService>();
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
     builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();

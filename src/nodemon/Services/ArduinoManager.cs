@@ -4,22 +4,11 @@ using System.IO.Ports;
 
 namespace nodemon.Services;
 
-public class ArduinoManager : IHostedService, IDisposable
+public class ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoManager> logger, ArduinoSingleton arduino, TelemetrySingleton telemetrySingleton) : IHostedService, IDisposable
 {
-    private readonly IOptions<NodeMonConfig> options;
-    private readonly ILogger<ArduinoManager> logger;
-    private readonly ArduinoSingleton arduino;
-    private readonly SerialPort arduinoSerialPort;
+    private readonly SerialPort arduinoSerialPort = new(options.Value.ArduinoPort, 9600);
     private bool stopping;
     private readonly Dictionary<int, bool> states = [];
-
-    public ArduinoManager(IOptions<NodeMonConfig> options, ILogger<ArduinoManager> logger, ArduinoSingleton arduino)
-    {
-        this.options = options;
-        this.logger = logger;
-        this.arduino = arduino;
-        arduinoSerialPort = new(options.Value.ArduinoPort, 9600);
-    }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -128,12 +117,40 @@ public class ArduinoManager : IHostedService, IDisposable
                     return;
                 }
                 logger.LogInformation(data.Trim());
+
+                // sensor: 22C 76%
+                if (data.StartsWith("sensor: "))
+                {
+                    HandleSensorData(data);
+                }
             }
         }, cancellationToken);
 
         logger.LogInformation("Arduino startup complete");
     }
-   
+
+    private void HandleSensorData(string data)
+    {
+        // sensor: 22C 76%
+        
+        var parts = data.Split(' ');
+        if (parts.Length != 3)
+        {
+            logger.LogWarning("Invalid sensor data: {data}", data);
+            return;
+        }
+
+        if (int.TryParse(parts[1][..^1], out var temperature))
+        {
+            telemetrySingleton.ChassisTemperature = temperature;
+        }
+
+        if (int.TryParse(parts[2][..^1], out var humidity))
+        {
+            telemetrySingleton.ChassisHumidity = humidity;
+        }
+    }
+
     public Task StopAsync(CancellationToken cancellationToken)
     {
         stopping = true;
