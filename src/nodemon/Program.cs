@@ -27,6 +27,8 @@ builder.Services.AddSingleton<TaitSingleton>();
 builder.Services.AddSingleton<NodeService>();
 builder.Services.AddTransient<IModemModeManager, ModemModeManager>();
 builder.Services.AddHostedService<KernelMonitorService>();
+builder.Services.AddSingleton<BeaconService>();
+builder.Services.AddHostedService<BeaconOnStartup>();
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
     builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();
