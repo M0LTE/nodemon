@@ -22,7 +22,7 @@ public class RegularTelemetryBeaconService(BeaconService beaconService, Telemetr
         return Task.CompletedTask;
     }
 
-    private int seq = 0;
+    private int seq = 10;
 
     private void DoWork(object? state)
     {
