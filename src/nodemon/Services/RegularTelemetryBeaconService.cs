@@ -21,7 +21,7 @@ public class RegularTelemetryBeaconService(BeaconService beaconService, Telemetr
             await beaconService.SendAprsTelemetrySeriesUnits("M0LTE-2", "APRS", "2m", "C", "%", "C", "C");
         }, stoppingToken);
 
-        seq = PersistentStateService.RestoreInt(persistenceKey, 159);
+        seq = PersistentStateService.RestoreInt(persistenceKey, 160);
 
         return Task.CompletedTask;
     }
