@@ -31,6 +31,7 @@ builder.Services.AddHostedService<KernelMonitorService>();
 builder.Services.AddSingleton<BeaconService>();
 builder.Services.AddHostedService<BeaconOnStartup>();
 builder.Services.AddHostedService<RegularTelemetryBeaconService>();
+builder.Services.AddSingleton<PersistentStateService>();
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 {
     builder.Services.AddSingleton<INodeSoftwareStateService, LinuxBpqStateService>();

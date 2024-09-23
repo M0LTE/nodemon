@@ -3,17 +3,25 @@ namespace nodemon.Services;
 
 public class PersistentStateService
 {
-    private const string dir = "~/.nodemon";
+    private readonly string dir;
 
-    static PersistentStateService()
+    public PersistentStateService(ILogger<PersistentStateService> logger)
     {
-        if (Directory.Exists("~/") && !Directory.Exists(dir))
+        var appdata = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        dir = Path.Combine(appdata, ".nodemon");
+
+        if (Directory.Exists(appdata) && !Directory.Exists(dir))
         {
+            logger.LogInformation("Creating {dir} for persistent state", dir);
             Directory.CreateDirectory(dir);
+        }
+        else
+        {
+            logger.LogInformation("Using {dir} for persistent state", dir);
         }
     }
 
-    internal static int RestoreInt(string key, int defaultValue)
+    internal int RestoreInt(string key, int defaultValue)
     {
         if (!File.Exists(Path.Combine(dir, key)))
         {
@@ -28,5 +36,5 @@ public class PersistentStateService
         return value;
     }
 
-    internal static void SaveInt(string key, int value) => File.WriteAllText(Path.Combine(dir, key), value.ToString());
+    internal void SaveInt(string key, int value) => File.WriteAllText(Path.Combine(dir, key), value.ToString());
 }

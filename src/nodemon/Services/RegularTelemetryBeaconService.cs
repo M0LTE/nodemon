@@ -2,7 +2,7 @@
 
 namespace nodemon.Services;
 
-public class RegularTelemetryBeaconService(BeaconService beaconService, TelemetrySingleton telemetrySingleton, ILogger<RegularTelemetryBeaconService> logger) : IHostedService
+public class RegularTelemetryBeaconService(BeaconService beaconService, TelemetrySingleton telemetrySingleton, ILogger<RegularTelemetryBeaconService> logger, PersistentStateService persistentStateService) : IHostedService
 {
     private const string persistenceKey = "telemetryBeaconSeq";
 
@@ -21,7 +21,7 @@ public class RegularTelemetryBeaconService(BeaconService beaconService, Telemetr
             await beaconService.SendAprsTelemetrySeriesUnits("M0LTE-2", "APRS", "2m", "C", "%", "C", "C");
         }, stoppingToken);
 
-        seq = PersistentStateService.RestoreInt(persistenceKey, 160);
+        seq = persistentStateService.RestoreInt(persistenceKey, 160);
 
         return Task.CompletedTask;
     }
@@ -45,7 +45,7 @@ public class RegularTelemetryBeaconService(BeaconService beaconService, Telemetr
             lastPaTemp2 = telemetrySingleton.PaTemp2.Value;
 
             Interlocked.Increment(ref seq);
-            PersistentStateService.SaveInt(persistenceKey, seq);
+            persistentStateService.SaveInt(persistenceKey, seq);
         }
     }
 
