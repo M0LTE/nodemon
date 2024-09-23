@@ -4,5 +4,6 @@ public class TelemetrySingleton
 {
     public int? ChassisTemperature { get; set; }
     public int? ChassisHumidity { get; set; }
-    public Dictionary<string, double> PaTemperatures { get; private set; } = [];
+    public int? PaTemp1 { get; set; }
+    public int? PaTemp2 { get; set; }
 }

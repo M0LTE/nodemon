@@ -11,7 +11,7 @@ public class TaitSingleton
     public Dictionary<string, TaitRadio> Radios = [];
 }
 
-public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger, IHubContext<NodeHub> hubContext, TaitSingleton taitSingleton) : IHostedService
+public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> logger, IHubContext<NodeHub> hubContext, TaitSingleton taitSingleton, TelemetrySingleton telemetrySingleton) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -24,11 +24,11 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
         {
             if (port.Skip) continue;
 
-            await Run(port);
+            await Start(port);
         }
     }
 
-    private Task Run(NodeMonConfig.Port port)
+    private Task Start(NodeMonConfig.Port port)
     {
         var lastRssiReported = Stopwatch.StartNew();
         var lastRssiUpdateSent = Stopwatch.StartNew();
@@ -38,6 +38,7 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
             TaitRadio radio = new(port.RadioPort, port.RadioBaud, logger);
             taitSingleton.Radios.Add(port.Id, radio);
+            int? tlmChannel = port.PaTempTelemetryChannel;
 
             radio.RawRssiUpdated += async (sender, args) =>
             {
@@ -67,7 +68,27 @@ public class TaitManager(IOptions<NodeMonConfig> config, ILogger<TaitManager> lo
 
             radio.PaTempRead += (sender, args) =>
             {
-                logger.LogInformation("{port} PA Temp: {temp}", port.Id, args.TempC);
+                if (tlmChannel == null)
+                {
+                    logger.LogInformation("{port} PA Temp: {temp}", port.Id, args.TempC);
+                }
+                else
+                {
+                    if (tlmChannel == 1)
+                    {
+                        logger.LogInformation("Saved port {port} PA temp {temp} to telemetry channel 1", port.Id, args.TempC);
+                        telemetrySingleton.PaTemp1 = (int)Math.Round(args.TempC, 0, MidpointRounding.AwayFromZero);
+                    }
+                    else if (tlmChannel == 2)
+                    {
+                        logger.LogInformation("Saved port {port} PA temp {temp}, to telemetry channel 2", port.Id, args.TempC);
+                        telemetrySingleton.PaTemp2 = (int)Math.Round(args.TempC, 0, MidpointRounding.AwayFromZero);
+                    }
+                    else
+                    {
+                        logger.LogWarning("Telemetry channel {channel} not supported", tlmChannel);
+                    }
+                }
             };
         }
         catch (Exception ex)

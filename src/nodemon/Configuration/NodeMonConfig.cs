@@ -15,6 +15,7 @@ public class NodeMonConfig
         /// </summary>
         public string? KernelAxport { get; set; }
         public List<Channel>? Channels { get; set; } = [];
+        public int? PaTempTelemetryChannel { get; set; }
     }
 
     public required string ArduinoPort { get; set; }
